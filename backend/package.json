@@ -1,0 +1,36 @@
+{
+  "name": "medioracle-backend",
+  "version": "1.0.0",
+  "description": "MediOracle AI - RAG-powered medical knowledge base backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "healthcare",
+    "rag",
+    "llm",
+    "langchain",
+    "openai"
+  ],
+  "author": "MediOracle Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "16.4.5",
+    "openai": "4.62.1",
+    "langchain": "^0.1.36",
+    "@langchain/core": "^0.1.48",
+    "@langchain/community": "^0.1.28",
+    "pdf-parse": "^1.1.1",
+    "axios": "^1.6.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
