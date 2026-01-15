@@ -29,7 +29,7 @@ Render is a great choice for full-stack Node.js apps with a free tier.
    - **Name:** `medioracle-ai` (or your choice)
    - **Root Directory:** `backend` (leave empty if root is backend)
    - **Environment:** `Node`
-   - **Build Command:** `cd ../backend && npm install`
+   - **Build Command:** `cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install`
    - **Start Command:** `cd backend && npm start`
    - **Auto-Deploy:** `Yes` (deploys on every push)
 
