@@ -29,6 +29,9 @@ EMERGENCY_SYMPTOMS = {
     "severe breathing difficulty",
     "loss of consciousness",
     "severe bleeding",
+    "vomiting blood",
+    "nose bleed",
+    "epistaxis",
     "poisoning",
     "anaphylaxis",
     "stroke symptoms",
@@ -45,6 +48,9 @@ SYMPTOM_SEVERITY_MAP = {
     "difficulty breathing": 90,
     "loss of consciousness": 100,
     "severe bleeding": 95,
+    "vomiting blood": 95,
+    "nose bleed": 95,
+    "epistaxis": 95,
     
     # High (70-89)
     "severe headache": 75,
@@ -89,6 +95,9 @@ def calculate_severity_score(symptoms: List[str]) -> int:
     if not symptoms:
         return 0
     
+    # Convert all symptoms to lowercase for consistent matching
+    symptoms_lower = [s.lower() for s in symptoms]
+    
     scores = []
     for symptom in symptoms:
         symptom_lower = symptom.lower()
@@ -109,6 +118,21 @@ def calculate_severity_score(symptoms: List[str]) -> int:
     
     # Weight: 60% average + 40% max (emphasize worst symptom)
     final_score = int(average * 0.6 + maximum * 0.4)
+
+    # Boosters for danger signs
+    # If any bleeding or vomiting blood is present, escalate to critical
+    if any(('bleed' in s or 'blood' in s or 'vomit' in s) for s in symptoms_lower):
+        final_score = max(final_score, 95)
+
+    # If there are two or more high-severity items, escalate
+    high_count = sum(1 for sc in scores if sc >= 80)
+    if high_count >= 2:
+        final_score = max(final_score, 90)
+
+    # Continuous or ongoing duration increases severity
+    if any('continuous' in s or 'ongoing' in s or 'persistent' in s for s in symptoms_lower):
+        final_score = min(100, final_score + 10)
+
     return min(100, max(0, final_score))
 
 
@@ -140,11 +164,28 @@ def detect_emergency(symptoms: List[str]) -> bool:
         True if emergency detected
     """
     symptoms_lower = [s.lower() for s in symptoms]
-    
+
+    # Direct match against known emergency phrases
     for emergency_symptom in EMERGENCY_SYMPTOMS:
         if any(emergency_symptom in symptom for symptom in symptoms_lower):
             return True
-    
+
+    # Fuzzy checks for common danger combinations (e.g., 'vomit' + 'blood')
+    for s in symptoms_lower:
+        # Vomiting blood
+        if 'vomit' in s and 'blood' in s:
+            return True
+        if 'throw' in s and 'blood' in s:
+            return True
+        if 'severe' in s and ('bleed' in s or 'bleeding' in s):
+            return True
+        # Nosebleed / epistaxis
+        if ('nose' in s and 'bleed' in s) or 'epistaxis' in s or 'nosebleed' in s:
+            return True
+        # Continuous or ongoing bleeding considered urgent
+        if ('continuous' in s or 'ongoing' in s) and ('bleed' in s or 'bleeding' in s):
+            return True
+
     return False
 
 
@@ -227,53 +268,90 @@ def get_condition_suggestions(
     """
     suggestions = []
     
-    symptoms_str = " ".join(s.lower() for s in symptoms)
-    
-    # Educational condition mapping (not diagnostic)
-    condition_map = {
-        "fever and cough": {
-            "condition": "Possible respiratory infection (viral or bacterial)",
-            "likelihood": "high",
-            "info": "Common symptoms include fever, cough, fatigue"
-        },
-        "headache and fever": {
-            "condition": "Possible viral illness or infection",
-            "likelihood": "moderate",
-            "info": "Often associated with flu or other infectious diseases"
-        },
-        "chest pain": {
-            "condition": "Multiple possible causes - requires emergency evaluation",
-            "likelihood": "unknown",
-            "info": "Can indicate heart problems or other serious conditions"
-        },
-        "severe headache": {
-            "condition": "Possible tension headache, migraine, or serious condition",
-            "likelihood": "moderate",
-            "info": "Requires professional evaluation to determine cause"
-        }
-    }
-    
-    for key, condition in condition_map.items():
-        if key in symptoms_str:
-            suggestions.append(condition)
-    
-    # Default suggestion if no specific match
+    symptoms_lower = [s.lower() for s in symptoms]
+    symptoms_str = " ".join(symptoms_lower)
+
+    # Helper to add suggestion without duplicates
+    def add_suggestion(condition, likelihood, info):
+        cond = {"condition": condition, "likelihood": likelihood, "info": info}
+        if not any(c["condition"] == condition for c in suggestions):
+            suggestions.append(cond)
+
+    # Emergency-related suggestions
+    if any("vomit" in s and "blood" in s for s in symptoms_lower) or "vomiting blood" in symptoms_str:
+        add_suggestion(
+            "Possible upper gastrointestinal bleeding (e.g., peptic ulcer, varices)",
+            "high",
+            "Hematemesis (vomiting blood) can indicate bleeding in the upper GI tract and requires urgent medical evaluation. Seek emergency care."
+        )
+
+    # Fever + severe systemic signs
+    if "high fever" in symptoms_str or any("fever" in s for s in symptoms_lower):
+        if "severe stomach pain" in symptoms_str or any("stomach" in s or "abdominal" in s for s in symptoms_lower):
+            add_suggestion(
+                "Possible dengue or severe systemic infection",
+                "moderate",
+                "High fever with severe abdominal pain can be seen in dengue and other systemic infections; evaluation and laboratory testing are often required."
+            )
+            add_suggestion(
+                "Possible gastroenteritis or foodborne illness",
+                "moderate",
+                "Often includes fever, vomiting, and abdominal pain; usually self-limited but may require rehydration and assessment."
+            )
+        else:
+            add_suggestion(
+                "Possible viral infection (e.g., influenza)",
+                "moderate",
+                "Fever with respiratory or constitutional symptoms commonly indicates a viral infection."
+            )
+
+    # Vomiting and abdominal pain without notable fever
+    if any("vomit" in s or "nausea" in s for s in symptoms_lower) and any("stomach" in s or "abdominal" in s for s in symptoms_lower):
+        add_suggestion(
+            "Possible gastroenteritis or food poisoning",
+            "moderate",
+            "Acute vomiting and abdominal pain are commonly due to gastroenteritis or foodborne causes; supportive care and hydration are important."
+        )
+
+    # Chest-related symptoms
+    if any("chest" in s for s in symptoms_lower):
+        add_suggestion(
+            "Multiple possible causes (cardiac, pulmonary, musculoskeletal)",
+            "unknown",
+            "Chest pain can indicate many conditions including cardiac ischemia; seek immediate medical assessment for chest pain especially if associated with shortness of breath or sweating."
+        )
+
+    # Headache patterns
+    if any("headache" in s for s in symptoms_lower):
+        add_suggestion(
+            "Tension headache or migraine",
+            "moderate",
+            "Headaches are a common symptom with many causes including tension-type headache and migraine; severe or sudden-onset headaches require urgent evaluation."
+        )
+
+    # If no clear match, provide a general suggestion
     if not suggestions:
-        suggestions.append({
-            "condition": "Requires professional medical evaluation",
-            "likelihood": "unknown",
-            "info": "Consult a healthcare provider for proper diagnosis"
-        })
-    
-    return suggestions
+        add_suggestion(
+            "Requires professional medical evaluation",
+            "unknown",
+            "Symptoms are non-specific; consult a healthcare provider for appropriate history, examination, and testing to determine the cause."
+        )
+
+    # Return up to 4 suggestions to keep the list concise
+    return suggestions[:4]
 
 
 def generate_emergency_response() -> Dict:
-    """Generate emergency response"""
+    """Generate emergency response (compatible with symptom response schema)"""
     return {
-        "is_emergency": True,
         "severity_score": 100,
         "risk_level": "CRITICAL",
-        "message": "🚨 EMERGENCY DETECTED 🚨\n\nYour symptoms may indicate a medical emergency.\n\n📞 CALL 911 IMMEDIATELY or go to the nearest emergency room.\n\nDO NOT DELAY. Seek immediate professional medical care.",
+        "is_emergency": True,
+        "symptoms_analysis": {},
+        "recommendations": [
+            "🚨 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)",
+            "Do not delay. Seek immediate professional medical care."
+        ],
+        "message": "🚨 EMERGENCY DETECTED 🚨\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.",
         "disclaimer": MEDICAL_DISCLAIMER
     }

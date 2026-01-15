@@ -26,7 +26,7 @@ router.post('/symptoms', async (req, res) => {
       });
     }
 
-    // Call FastAPI backend
+    // Call FastAPI quick analysis endpoint
     const response = await axios.post(`${FASTAPI_URL}/api/analyze-symptoms`, {
       symptoms,
       age: age || null,
@@ -34,9 +34,28 @@ router.post('/symptoms', async (req, res) => {
       duration: duration || null
     });
 
+    // Additionally call detailed analysis to get possible condition suggestions
+    let conditions = [];
+    try {
+      const detailed = await axios.post(`${FASTAPI_URL}/api/analyze`, {
+        symptoms: symptoms.join(', '),
+        medical_history: [],
+        current_medications: []
+      });
+      conditions = detailed.data.possible_conditions || [];
+    } catch (condErr) {
+      logger.warn('Could not fetch condition suggestions', condErr.message);
+      // Proceed without conditions
+    }
+
+    // Merge possible conditions into the response under data.possible_conditions
+    const responseData = Object.assign({}, response.data, {
+      possible_conditions: conditions
+    });
+
     res.json({
       success: true,
-      data: response.data
+      data: responseData
     });
   } catch (error) {
     logger.error('Symptoms analysis error', error.message);

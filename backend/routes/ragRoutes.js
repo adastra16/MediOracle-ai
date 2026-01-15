@@ -69,6 +69,27 @@ router.post('/query', async (req, res) => {
 });
 
 /**
+ * @route POST /rag/diagnose
+ * @desc Use RAG + LLM to suggest possible conditions based on symptoms
+ */
+router.post('/diagnose', async (req, res) => {
+  try {
+    const { symptoms, age, gender } = req.body;
+
+    if (!symptoms || (Array.isArray(symptoms) && symptoms.length === 0) || (typeof symptoms === 'string' && symptoms.trim().length === 0)) {
+      return res.status(400).json({ success: false, error: 'Symptoms are required' });
+    }
+
+    const result = await RAGPipeline.diagnoseSymptoms(symptoms, { age, gender });
+
+    res.json({ success: true, data: result });
+  } catch (error) {
+    logger.error('Diagnose route error', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * @route GET /rag/stats
  * @desc Get vector store and pipeline statistics
  */

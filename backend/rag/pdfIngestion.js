@@ -3,7 +3,7 @@
  * Handles PDF upload, text extraction, and processing
  */
 
-import pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import fs from 'fs';
 import path from 'path';
 import logger from '../utils/logger.js';

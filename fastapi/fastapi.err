@@ -1,0 +1,152 @@
+INFO:     Started server process [33004]
+INFO:     Waiting for application startup.
+INFO:__main__:MediOracle AI FastAPI Server starting...
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+WARNING:__main__:Emergency symptoms detected: ['headache', 'continuous nose bleed']
+WARNING:__main__:Emergency symptoms detected: ['vomiting blood', 'fevel']
+WARNING:__main__:Emergency symptoms detected in detailed analysis
+ERROR:__main__:Unhandled exception: 6 validation errors:
+  {'type': 'missing', 'loc': ('response', 'symptom_assessment'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'possible_conditions'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'severity_level'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'recommended_actions'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'risk_factors'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'when_to_seek_help'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+
+ERROR:    Exception in ASGI application
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 186, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\anyio\_backends\_asyncio.py", line 781, in __aexit__
+  |     raise BaseExceptionGroup(
+  | exceptiongroup.ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    |     with collapse_excgroups():
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 153, in __exit__
+    |     self.gen.throw(typ, value, traceback)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    |     raise exc
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |   File "C:\MediOracle Ai\fastapi\main.py", line 59, in add_medical_disclaimer_header
+    |     response = await call_next(request)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    |     raise app_exc
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 62, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 715, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 735, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 62, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 73, in app
+    |     response = await f(request)
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 327, in app
+    |     content = await serialize_response(
+    |   File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 176, in serialize_response
+    |     raise ResponseValidationError(
+    | fastapi.exceptions.ResponseValidationError: 6 validation errors:
+    |   {'type': 'missing', 'loc': ('response', 'symptom_assessment'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+    |   {'type': 'missing', 'loc': ('response', 'possible_conditions'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+    |   {'type': 'missing', 'loc': ('response', 'severity_level'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+    |   {'type': 'missing', 'loc': ('response', 'recommended_actions'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+    |   {'type': 'missing', 'loc': ('response', 'risk_factors'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+    |   {'type': 'missing', 'loc': ('response', 'when_to_seek_help'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+    | 
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 185, in __call__
+    with collapse_excgroups():
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 187, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "C:\MediOracle Ai\fastapi\main.py", line 59, in add_medical_disclaimer_header
+    response = await call_next(request)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 163, in call_next
+    raise app_exc
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 327, in app
+    content = await serialize_response(
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py", line 176, in serialize_response
+    raise ResponseValidationError(
+fastapi.exceptions.ResponseValidationError: 6 validation errors:
+  {'type': 'missing', 'loc': ('response', 'symptom_assessment'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'possible_conditions'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'severity_level'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'recommended_actions'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'risk_factors'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+  {'type': 'missing', 'loc': ('response', 'when_to_seek_help'), 'msg': 'Field required', 'input': {'severity_score': 100, 'risk_level': 'CRITICAL', 'is_emergency': True, 'symptoms_analysis': {}, 'recommendations': ['\U0001f6a8 SEEK EMERGENCY CARE IMMEDIATELY (Call 911 or go to the ER)', 'Do not delay. Seek immediate professional medical care.'], 'message': '\U0001f6a8 EMERGENCY DETECTED \U0001f6a8\n\nYour symptoms may indicate a medical emergency. Call emergency services immediately.', 'disclaimer': '\n\u26a0\ufe0f IMPORTANT MEDICAL DISCLAIMER\n\nThis information is for educational purposes only and does NOT constitute medical advice.\nIt is not a substitute for professional medical diagnosis, treatment, or consultation.\n\n\U0001f6a8 SEEK IMMEDIATE EMERGENCY CARE FOR:\n- Chest pain or pressure\n- Difficulty breathing\n- Loss of consciousness\n- Severe bleeding or trauma\n- Poisoning or overdose\n- Signs of stroke\n- Severe allergic reactions\n\nAlways consult a qualified healthcare provider for proper evaluation and treatment.\n'}}
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 435, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\uvicorn\middleware\proxy_headers.py", line 78, in __call__
+    return await self.app(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\RUPSA NANDA\AppData\Local\Programs\Python\Python310\lib\site-packages\starlette\middleware\errors.py", line 182, in __call__
+    await response(scope, receive, send)
+TypeError: 'dict' object is not callable
+ERROR:__main__:Error analyzing symptoms: name 'symptoms_lower' is not defined
+ERROR:__main__:Error analyzing symptoms: name 'symptoms_lower' is not defined
+ERROR:__main__:Error analyzing symptoms: name 'symptoms_lower' is not defined
+ERROR:__main__:Error analyzing symptoms: name 'symptoms_lower' is not defined
+ERROR:__main__:Error analyzing symptoms: name 'symptoms_lower' is not defined

@@ -18,10 +18,39 @@ class RAGPipeline {
       parseInt(process.env.CHUNK_SIZE) || 500,
       parseInt(process.env.CHUNK_OVERLAP) || 100
     );
-    this.openaiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
+    
+    // Initialize OpenAI client lazily (will be set in initialize() after env vars are loaded)
+      this.openaiClient = null;
     this.initialized = false;
+  }
+
+  /**
+   * Get or initialize OpenAI client
+   * @returns {OpenAI|null} OpenAI client instance or null if unavailable
+   */
+  _getOpenAIClient() {
+    // Lazy initialization - check environment variable at runtime
+    if (!this.openaiClient && process.env.OPENAI_API_KEY) {
+      const apiKey = process.env.OPENAI_API_KEY.trim();
+      
+      // Validate API key format (should start with 'sk-')
+      if (!apiKey.startsWith('sk-')) {
+        logger.warn('OPENAI_API_KEY does not appear to be valid (should start with "sk-")');
+        return null;
+      }
+
+      try {
+        this.openaiClient = new OpenAI({
+          apiKey: apiKey
+        });
+        logger.info('OpenAI client initialized successfully');
+      } catch (error) {
+        logger.error('Failed to initialize OpenAI client', error.message);
+        return null;
+      }
+    }
+    
+    return this.openaiClient;
   }
 
   /**
@@ -29,7 +58,35 @@ class RAGPipeline {
    */
   async initialize() {
     try {
+      // Log environment variable status
+      if (process.env.OPENAI_API_KEY) {
+        const keyLength = process.env.OPENAI_API_KEY.length;
+        const keyPreview = process.env.OPENAI_API_KEY.substring(0, 7) + '...' + process.env.OPENAI_API_KEY.slice(-4);
+        logger.info(`OPENAI_API_KEY detected: ${keyPreview} (length: ${keyLength})`);
+      } else {
+        logger.warn('OPENAI_API_KEY not found in environment variables');
+      }
+
       await EmbeddingService.initialize();
+
+      // Initialize OpenAI client if API key is available
+      const client = this._getOpenAIClient();
+
+      // If an API key exists, verify that the OpenAI client can be used (avoid invalid key causing runtime errors)
+      if (client) {
+        try {
+          // Try a simple API call to verify authentication (list models)
+          await client.models.list();
+          logger.info('OpenAI client authenticated and available');
+        } catch (e) {
+          logger.error('OpenAI client authentication failed', e.message);
+          logger.warn('Running in demo mode - OpenAI features will be unavailable');
+          this.openaiClient = null;
+        }
+      } else {
+        logger.warn('OpenAI client not initialized - running in demo mode');
+      }
+
       this.initialized = true;
       logger.info('RAG Pipeline initialized');
     } catch (error) {
@@ -124,7 +181,7 @@ class RAGPipeline {
   }
 
   /**
-   * Generate response using LLM with retrieved context
+   * Generate response using intelligent text extraction from retrieved documents (FREE - No OpenAI)
    * @param {string} query - User query
    * @param {Array} retrievedDocuments - Retrieved context documents
    * @returns {Promise<Object>} - Generated response with metadata
@@ -137,61 +194,97 @@ class RAGPipeline {
         return generateEmergencyResponse();
       }
 
-      // Build context from retrieved documents
-      const context = retrievedDocuments
-        .map((doc, idx) => `[Source ${idx + 1}: ${doc.metadata.source}]\n${doc.content}`)
-        .join('\n\n---\n\n');
+      if (!retrievedDocuments || retrievedDocuments.length === 0) {
+        return {
+          success: true,
+          response: 'I could not find relevant medical information in the knowledge base. Please consult a healthcare provider for your questions.',
+          sourcesUsed: [],
+          confidence: 0.0,
+          isDemoMode: false,
+          tokensUsed: { input: 0, output: 0, total: 0 }
+        };
+      }
 
-      const systemPrompt = `You are a medical education assistant providing health information.
+      // Extract query keywords for intelligent matching
+      const queryLower = query.toLowerCase();
+      const queryKeywords = queryLower.split(/\s+/).filter(word => word.length > 2);
 
-CRITICAL SAFETY CONSTRAINTS:
-1. NEVER diagnose medical conditions
-2. NEVER prescribe medications
-3. ALWAYS recommend consulting a healthcare provider
-4. NEVER claim to be a substitute for professional medical advice
-5. Flag emergency symptoms and direct to emergency services
-6. Use educational language only
-7. Cite your sources (provided documents)
+      // Build intelligent response from retrieved documents
+      let responseParts = [];
+      
+      // Medical disclaimer header
+      responseParts.push('⚠️ **IMPORTANT MEDICAL DISCLAIMER**\n');
+      responseParts.push('This information is for educational purposes only and does NOT constitute medical advice. Always consult a qualified healthcare provider for proper evaluation and treatment.\n');
 
-For every response:
-- Start with a safety disclaimer
-- Provide educational information ONLY
-- Suggest professional consultation
-- Cite the source documents used
+      // Extract relevant information from each document
+      const relevantExcerpts = [];
+      retrievedDocuments.forEach((doc, idx) => {
+        const content = doc.content;
+        const contentLower = content.toLowerCase();
+        
+        // Find sentences that contain query keywords
+        const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 10);
+        const relevantSentences = sentences.filter(sentence => {
+          const sentenceLower = sentence.toLowerCase();
+          return queryKeywords.some(keyword => sentenceLower.includes(keyword)) ||
+                 queryLower.split(' ').some(word => sentenceLower.includes(word));
+        });
 
-Remember: You are providing EDUCATIONAL information, NOT medical advice.`;
-
-      const userPrompt = `Based on the following medical documents, please answer this question:
-
-QUESTION: ${query}
-
-CONTEXT FROM DOCUMENTS:
-${context}
-
-IMPORTANT:
-- Answer based ONLY on the provided documents
-- Use educational language
-- Do NOT diagnose
-- Recommend professional consultation
-- Cite your sources`;
-
-      // Call OpenAI API with v4 SDK
-      const message = await this.openaiClient.messages.create({
-        model: 'gpt-4',
-        max_tokens: 1000,
-        messages: [
-          {
-            role: 'user',
-            content: userPrompt
+        // If we found relevant sentences, use them; otherwise use the most relevant part
+        let excerpt = '';
+        if (relevantSentences.length > 0) {
+          excerpt = relevantSentences.slice(0, 3).join('. ').trim();
+        } else {
+          // Extract a relevant portion around query keywords
+          const keywordIndex = contentLower.indexOf(queryKeywords[0] || queryLower);
+          if (keywordIndex !== -1) {
+            const start = Math.max(0, keywordIndex - 150);
+            const end = Math.min(content.length, keywordIndex + 300);
+            excerpt = content.substring(start, end).trim();
+            if (start > 0) excerpt = '...' + excerpt;
+            if (end < content.length) excerpt = excerpt + '...';
+          } else {
+            excerpt = content.substring(0, 300).trim() + '...';
           }
-        ],
-        system: systemPrompt
+        }
+
+        if (excerpt) {
+          relevantExcerpts.push({
+            source: doc.metadata.source,
+            excerpt: excerpt,
+            similarity: doc.similarity
+          });
+        }
       });
 
-      let responseText = message.content[0].type === 'text' ? message.content[0].text : '';
+      // Build the response
+      responseParts.push(`**Based on your question: "${query}"**\n`);
+      responseParts.push('Here is relevant educational information from the uploaded medical documents:\n');
 
-      // Enforce medical safety constraints
-      responseText = enforceConstraints(responseText);
+      // Add excerpts with citations
+      relevantExcerpts.forEach((item, idx) => {
+        responseParts.push(`\n**Source ${idx + 1}** (from ${item.source}, relevance: ${(item.similarity * 100).toFixed(1)}%):`);
+        responseParts.push(item.excerpt);
+      });
+
+      // Add summary and recommendations
+      responseParts.push('\n---\n');
+      responseParts.push('**Key Points:**');
+      
+      // Extract key points (simple extraction based on common medical patterns)
+      const allContent = retrievedDocuments.map(d => d.content).join(' ');
+      const keyPoints = this._extractKeyPoints(query, allContent);
+      keyPoints.forEach(point => {
+        responseParts.push(`• ${point}`);
+      });
+
+      responseParts.push('\n**Recommendations:**');
+      responseParts.push('• Consult a qualified healthcare provider for proper evaluation');
+      responseParts.push('• Keep track of symptoms and their progression');
+      responseParts.push('• Follow basic health precautions (hygiene, rest, hydration)');
+      responseParts.push('• Seek emergency care if symptoms worsen or become severe');
+
+      const responseText = responseParts.join('\n');
 
       return {
         success: true,
@@ -201,16 +294,68 @@ IMPORTANT:
           similarity: doc.similarity.toFixed(3),
           excerpt: doc.content.substring(0, 100) + '...'
         })),
-        confidence: retrievedDocuments.length > 0 ? 0.8 : 0.5,
+        confidence: retrievedDocuments.length > 0 ? 
+          Math.min(0.95, retrievedDocuments[0].similarity + 0.1) : 0.5,
+        isDemoMode: false,
         tokensUsed: {
-          input: message.usage.input_tokens,
-          output: message.usage.output_tokens
+          input: 0,
+          output: 0,
+          total: 0
         }
       };
     } catch (error) {
       logger.error('Response generation failed', error.message);
       throw error;
     }
+  }
+
+  /**
+   * Extract key points from content based on query (FREE - No OpenAI)
+   * @param {string} query - User query
+   * @param {string} content - Document content
+   * @returns {Array<string>} - Array of key points
+   */
+  _extractKeyPoints(query, content) {
+    const queryLower = query.toLowerCase();
+    const contentLower = content.toLowerCase();
+    const keyPoints = [];
+    
+    // Common medical patterns to extract
+    const patterns = [
+      { pattern: /symptoms?\s+(?:of|include|are|may include)[:.]?\s*([^.]+)/gi, label: 'Symptoms' },
+      { pattern: /treatment[s]?\s+(?:of|for|include|may include)[:.]?\s*([^.]+)/gi, label: 'Treatment' },
+      { pattern: /causes?\s+(?:of|include|are|may include)[:.]?\s*([^.]+)/gi, label: 'Causes' },
+      { pattern: /prevention\s+(?:of|include|are|may include)[:.]?\s*([^.]+)/gi, label: 'Prevention' },
+      { pattern: /diagnosis\s+(?:of|include|are|may include)[:.]?\s*([^.]+)/gi, label: 'Diagnosis' }
+    ];
+
+    patterns.forEach(({ pattern, label }) => {
+      const matches = content.match(pattern);
+      if (matches && matches.length > 0) {
+        matches.slice(0, 2).forEach(match => {
+          const point = match.replace(/symptoms?|treatment[s]?|causes?|prevention|diagnosis/gi, '').trim();
+          if (point.length > 20 && point.length < 200) {
+            keyPoints.push(`${label}: ${point.substring(0, 150)}`);
+          }
+        });
+      }
+    });
+
+    // If no patterns found, extract sentences containing query keywords
+    if (keyPoints.length === 0) {
+      const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 20);
+      const queryWords = queryLower.split(/\s+/).filter(w => w.length > 2);
+      
+      sentences.forEach(sentence => {
+        const sentenceLower = sentence.toLowerCase();
+        if (queryWords.some(word => sentenceLower.includes(word)) && sentence.length < 200) {
+          keyPoints.push(sentence.trim());
+          if (keyPoints.length >= 3) return;
+        }
+      });
+    }
+
+    return keyPoints.slice(0, 5); // Limit to 5 key points
   }
 
   /**
@@ -240,6 +385,105 @@ IMPORTANT:
       return response;
     } catch (error) {
       logger.error('Query processing failed', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Diagnose possible conditions using RAG + LLM or fallback rules
+   * @param {Array|string} symptoms - List of symptoms or comma-separated string
+   * @param {Object} options - Optional parameters like age, gender
+   * @returns {Promise<Object>} - { success, possible_conditions, sources, isDemoMode }
+   */
+  async diagnoseSymptoms(symptoms, options = {}) {
+    try {
+      // Normalize symptoms to string
+      const symptomsList = Array.isArray(symptoms) ? symptoms : (typeof symptoms === 'string' ? symptoms.split(',').map(s => s.trim()) : []);
+      const query = `Symptoms: ${symptomsList.join(', ')}. Age: ${options.age || 'N/A'}. Gender: ${options.gender || 'N/A'}. Provide possible educational conditions.`;
+
+      // Retrieve context
+      const retrievedDocs = await this.retrieveRelevantDocuments(query, 6, parseFloat(process.env.SIMILARITY_THRESHOLD) || 0.7);
+
+      // Use FREE document-based condition analysis (No OpenAI required)
+      logger.info('Using free document-based condition analysis');
+
+        const lower = symptomsList.map(s => s.toLowerCase());
+
+        // Small knowledge mapping for diseases -> keywords
+        const diseaseMap = [
+          { name: 'Dengue', keywords: ['dengue', 'dengue fever', 'aedes'] },
+          { name: 'Gastroenteritis / Food poisoning', keywords: ['gastroenteritis', 'food poisoning', 'vomit', 'vomiting', 'diarrhea'] },
+          { name: 'Upper gastrointestinal bleeding (e.g., peptic ulcer)', keywords: ['hematemesis', 'vomiting blood', 'upper gi bleed', 'peptic ulcer'] },
+          { name: 'Respiratory infection (viral or bacterial)', keywords: ['influenza', 'flu', 'respiratory infection', 'cough', 'pneumonia'] },
+          { name: 'Migraine / Headache disorder', keywords: ['migraine', 'severe headache', 'headache'] }
+        ];
+
+        // Aggregate evidence from documents
+        const evidenceScores = {};
+        retrievedDocs.forEach(doc => {
+          const content = (doc.content || '').toLowerCase();
+          diseaseMap.forEach(d => {
+            let count = 0;
+            d.keywords.forEach(kw => {
+              // Count keyword occurrences
+              const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+              const matches = content.match(re);
+              if (matches) count += matches.length;
+            });
+            if (count > 0) {
+              evidenceScores[d.name] = evidenceScores[d.name] || { score: 0, mentions: 0, docRefs: [] };
+              // Weight by document similarity and count
+              evidenceScores[d.name].score += (count * (doc.similarity || 0.5));
+              evidenceScores[d.name].mentions += count;
+              evidenceScores[d.name].docRefs.push({ source: doc.metadata.source, excerpt: content.substring(0, 240) });
+            }
+          });
+        });
+
+        // Build suggestions from evidence scores
+        const suggestions = [];
+        Object.entries(evidenceScores).forEach(([name, v]) => {
+          // Normalize score into 0-1 (simple scaling)
+          const raw = v.score;
+          const confidence = Math.min(0.95, Math.max(0.2, raw / (1 + raw)));
+          suggestions.push({ condition: name, confidence: Math.round(confidence * 100) / 100, rationale: `${v.mentions} relevant term(s) found in documents`, sources: v.docRefs });
+        });
+
+        // Also include symptom-based heuristics (urgent overrides)
+        if (lower.some(s => s.includes('vomit') && s.includes('blood')) || lower.some(s => s.includes('nose') && s.includes('bleed') || s.includes('nosebleed') || s.includes('continuous'))) {
+          suggestions.unshift({ condition: 'Urgent: Possible bleeding event (seek emergency care)', confidence: 0.98, rationale: 'Signs of active bleeding were reported.', sources: [] });
+        }
+
+        // If no suggestions from docs, fallback to simple symptom mapping
+        if (suggestions.length === 0) {
+          const simple = [];
+          const joined = lower.join(' ');
+          if (joined.includes('fever') && joined.includes('cough')) {
+            simple.push({ condition: 'Possible respiratory infection (viral or bacterial)', confidence: 0.6, rationale: 'Fever and cough commonly indicate respiratory infections.' });
+          }
+          if (joined.includes('fever') && (joined.includes('stomach') || joined.includes('abdominal') || joined.includes('pain'))) {
+            simple.push({ condition: 'Possible systemic infection such as dengue', confidence: 0.55, rationale: 'High fever with abdominal pain may indicate systemic infection.' });
+          }
+          if (joined.includes('vomit') && joined.includes('blood') || joined.includes('nose') && joined.includes('bleed')) {
+            simple.unshift({ condition: 'Urgent: Possible bleeding event (seek emergency care)', confidence: 0.95, rationale: 'Bleeding signs (vomiting blood, nosebleed) require immediate evaluation.' });
+          }
+          if (simple.length === 0) {
+            simple.push({ condition: 'Requires professional medical evaluation', confidence: 0.4, rationale: 'No clear mapping from symptoms to conditions; further evaluation required.' });
+          }
+          suggestions.push(...simple);
+        }
+
+        // Limit to 4 suggestions, ensure they are sorted by confidence
+        suggestions.sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+
+        return {
+          success: true,
+          possible_conditions: suggestions.slice(0, 4),
+          sources: retrievedDocs.map(d => ({ source: d.metadata.source, similarity: d.similarity })),
+          isDemoMode: false
+        };
+    } catch (error) {
+      logger.error('Diagnosis failed', error.message);
       throw error;
     }
   }

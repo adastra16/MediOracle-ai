@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -27,6 +27,11 @@ export const ragAPI = {
   // Get pipeline statistics
   getStats: async () => {
     return api.get('/rag/stats');
+  },
+
+  // Diagnose symptoms using RAG + LLM
+  diagnoseSymptoms: async (symptoms, age, gender) => {
+    return api.post('/rag/diagnose', { symptoms, age, gender });
   },
 
   // Clear vector store

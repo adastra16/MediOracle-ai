@@ -1,0 +1,6 @@
+[ERROR] 2026-01-14T18:53:32.130Z - Embedding generation failed 401 Incorrect API key provided: O. You can find your API key at https://platform.openai.com/account/api-keys.
+[ERROR] 2026-01-14T18:53:32.133Z - Diagnosis failed Cannot read properties of undefined (reading 'create')
+[ERROR] 2026-01-14T18:53:32.133Z - Diagnose route error Cannot read properties of undefined (reading 'create')
+[ERROR] 2026-01-14T18:54:31.191Z - Embedding generation failed 401 Incorrect API key provided: O. You can find your API key at https://platform.openai.com/account/api-keys.
+[ERROR] 2026-01-14T18:54:31.193Z - Diagnosis failed Cannot read properties of undefined (reading 'create')
+[ERROR] 2026-01-14T18:54:31.193Z - Diagnose route error Cannot read properties of undefined (reading 'create')

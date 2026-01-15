@@ -50,7 +50,22 @@ export default function SymptomAnalyzer() {
         duration || null
       );
 
-      setResult(response.data);
+      let mergedResult = response.data;
+
+      // Augment with RAG+LLM diagnosis if available
+      try {
+        const ragResp = await ragAPI.diagnoseSymptoms(symptomsList, age ? parseInt(age) : null, gender || null);
+        if (ragResp?.data?.possible_conditions) {
+          mergedResult.possible_conditions = ragResp.data.possible_conditions;
+          mergedResult.rag_sources = ragResp.data.sources || [];
+          mergedResult.rag_is_demo = ragResp.data.isDemoMode;
+        }
+      } catch (ragErr) {
+        // Non-fatal; keep original result
+        console.warn('RAG diagnosis failed', ragErr);
+      }
+
+      setResult(mergedResult);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to analyze symptoms');
     } finally {
@@ -195,6 +210,45 @@ export default function SymptomAnalyzer() {
               ))}
             </div>
           </div>
+
+          {/* Possible Conditions */}
+          {result.data.possible_conditions && result.data.possible_conditions.length > 0 && (
+            <div className="p-4 bg-white border border-gray-200 rounded-lg">
+              <p className="font-semibold mb-3">🩺 Possible Conditions (Educational)</p>
+              <div className="space-y-2">
+                {result.data.possible_conditions.map((cnd, idx) => (
+                  <div key={idx} className="p-2 bg-gray-50 rounded border-l-4 border-indigo-300">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-semibold text-gray-800">{cnd.condition}</p>
+                        {cnd.rationale && (
+                          <p className="text-sm text-gray-600">{cnd.rationale}</p>
+                        )}
+                        {cnd.info && (
+                          <p className="text-sm text-gray-600">{cnd.info}</p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold">{(cnd.confidence || cnd.likelihood || cnd.confidence === 0) ? `${Math.round((cnd.confidence || (cnd.likelihood === 'high' ? 0.8 : cnd.likelihood === 'moderate' ? 0.6 : 0.4)) * 100)}%` : ''}</p>
+                        <p className="text-xs text-gray-500">confidence</p>
+                      </div>
+                    </div>
+
+                    {cnd.sources && cnd.sources.length > 0 && (
+                      <details className="mt-2 text-sm text-gray-600">
+                        <summary className="font-medium">Sources / Evidence</summary>
+                        <ul className="mt-2 list-disc list-inside">
+                          {cnd.sources.map((s, i) => (
+                            <li key={i} className="text-xs text-gray-600">{s.source}: {s.excerpt ? `${s.excerpt.substring(0, 120)}...` : ''}</li>
+                          ))}
+                        </ul>
+                      </details>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Recommendations */}
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">

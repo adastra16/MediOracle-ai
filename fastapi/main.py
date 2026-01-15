@@ -27,11 +27,13 @@ from logic import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Lifespan context manager
+# Lifespan context manager - properly defined
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Startup
     logger.info("MediOracle AI FastAPI Server starting...")
     yield
+    # Shutdown
     logger.info("MediOracle AI FastAPI Server shutting down...")
 
 # Create FastAPI app

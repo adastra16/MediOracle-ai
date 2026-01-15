@@ -72,10 +72,13 @@ class VectorStore {
     }));
 
     // Filter by threshold and sort by similarity
-    return results
-      .filter(doc => doc.similarity >= threshold)
-      .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, topK)
+    // If no results above threshold, return top results anyway (for demo mode)
+    let filtered = results.filter(doc => doc.similarity >= threshold);
+    if (filtered.length === 0) {
+      filtered = results.sort((a, b) => b.similarity - a.similarity).slice(0, topK);
+    }
+    
+    return filtered
       .map(({ similarity, embedding, ...rest }) => ({
         ...rest,
         similarity
