@@ -21,24 +21,8 @@ import medicalRoutes from './routes/medicalRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables from backend/.env
-const envPath = path.join(__dirname, '.env');
-const envResult = dotenv.config({ path: envPath });
-
-// Log environment variable status (without exposing the key)
-if (envResult.error) {
-  console.warn(`[WARN] Failed to load .env file from ${envPath}:`, envResult.error.message);
-} else {
-  console.log(`[INFO] Environment variables loaded from ${envPath}`);
-}
-
-// Verify OpenAI API key is loaded (log status without exposing key)
-if (process.env.OPENAI_API_KEY) {
-  const keyPreview = process.env.OPENAI_API_KEY.substring(0, 7) + '...' + process.env.OPENAI_API_KEY.slice(-4);
-  console.log(`[INFO] OPENAI_API_KEY found: ${keyPreview} (length: ${process.env.OPENAI_API_KEY.length})`);
-} else {
-  console.warn('[WARN] OPENAI_API_KEY not found in environment variables');
-}
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

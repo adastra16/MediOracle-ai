@@ -33,13 +33,26 @@ export const EMERGENCY_KEYWORDS = [
   'breathing difficulty',
   'loss of consciousness',
   'severe bleeding',
+  'internal bleeding',
+  'bleeding internally',
+  'vomiting blood',
+  'blood in stool',
+  'blood in urine',
+  'bleeding from rectum',
   'poisoning',
   'allergic reaction',
   'stroke',
   'cardiac arrest',
   'severe trauma',
   'suicide',
-  'overdose'
+  'overdose',
+  'severe injury',
+  'broken bone',
+  'head injury',
+  'severe burn',
+  'difficulty breathing',
+  'shortness of breath',
+  'severe pain'
 ];
 
 /**
@@ -48,8 +61,26 @@ export const EMERGENCY_KEYWORDS = [
  * @returns {boolean} - True if emergency keyword detected
  */
 export function detectEmergency(userInput) {
+  if (!userInput || typeof userInput !== 'string') return false;
   const lowerInput = userInput.toLowerCase();
-  return EMERGENCY_KEYWORDS.some(keyword => lowerInput.includes(keyword));
+  
+  // Check for emergency keywords
+  const hasEmergencyKeyword = EMERGENCY_KEYWORDS.some(keyword => {
+    const keywordLower = keyword.toLowerCase();
+    return lowerInput.includes(keywordLower);
+  });
+  
+  // Also check for variations and related terms
+  const emergencyPatterns = [
+    /\binternal\s+bleeding\b/i,
+    /\bbleeding\s+internally\b/i,
+    /\bhigh\s+fever\b.*\binternal\s+bleeding\b/i,
+    /\binternal\s+bleeding\b.*\bhigh\s+fever\b/i,
+  ];
+  
+  const matchesPattern = emergencyPatterns.some(pattern => pattern.test(userInput));
+  
+  return hasEmergencyKeyword || matchesPattern;
 }
 
 /**

@@ -74,13 +74,26 @@ router.post('/query', async (req, res) => {
  */
 router.post('/diagnose', async (req, res) => {
   try {
-    const { symptoms, age, gender } = req.body;
+    const { symptoms, age, gender, duration } = req.body;
 
+    // Validation
     if (!symptoms || (Array.isArray(symptoms) && symptoms.length === 0) || (typeof symptoms === 'string' && symptoms.trim().length === 0)) {
       return res.status(400).json({ success: false, error: 'Symptoms are required' });
     }
 
-    const result = await RAGPipeline.diagnoseSymptoms(symptoms, { age, gender });
+    if (!age || age < 0 || age > 150) {
+      return res.status(400).json({ success: false, error: 'Valid age is required (0-150)' });
+    }
+
+    if (!gender || !['Male', 'Female', 'Other'].includes(gender)) {
+      return res.status(400).json({ success: false, error: 'Gender is required (Male, Female, or Other)' });
+    }
+
+    if (!duration || duration < 0) {
+      return res.status(400).json({ success: false, error: 'Duration in days is required' });
+    }
+
+    const result = await RAGPipeline.diagnoseSymptoms(symptoms, { age, gender, duration });
 
     res.json({ success: true, data: result });
   } catch (error) {
