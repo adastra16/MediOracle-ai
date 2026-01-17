@@ -4,7 +4,8 @@ services:
     env: node
     plan: free
     # Build command includes --legacy-peer-deps to handle React 18 peer dependency warnings
-    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install
+    # Build command forces devDependencies install to work even with old commits
+    buildCommand: cd frontend && NODE_ENV=development npm install --legacy-peer-deps && npm run build && cd ../backend && npm install
     startCommand: cd backend && npm start
     envVars:
       - key: OPENAI_API_KEY
