@@ -742,6 +742,32 @@ Return ONLY valid JSON, no markdown, no extra text.`;
       };
     } catch (error) {
       logger.error('Diagnosis failed', error.message);
+      
+      // Handle OpenAI API specific errors
+      if (error.response) {
+        const status = error.response.status;
+        const errorData = error.response.data || error.response;
+        
+        if (status === 429) {
+          throw new Error('OpenAI API quota exceeded. Please check your API key billing and plan. Visit https://platform.openai.com/account/billing to add credits.');
+        } else if (status === 401) {
+          throw new Error('OpenAI API key is invalid or expired. Please check your OPENAI_API_KEY environment variable.');
+        } else if (status === 403) {
+          throw new Error('OpenAI API access forbidden. Please check your API key permissions.');
+        } else {
+          throw new Error(`OpenAI API error: ${errorData.error?.message || error.message}`);
+        }
+      }
+      
+      // Handle OpenAI SDK errors
+      if (error.message && error.message.includes('quota')) {
+        throw new Error('OpenAI API quota exceeded. Please check your API key billing and plan. Visit https://platform.openai.com/account/billing to add credits.');
+      }
+      
+      if (error.message && error.message.includes('401')) {
+        throw new Error('OpenAI API key is invalid or expired. Please check your OPENAI_API_KEY environment variable.');
+      }
+      
       throw error;
     }
   }

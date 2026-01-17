@@ -98,7 +98,22 @@ router.post('/diagnose', async (req, res) => {
     res.json({ success: true, data: result });
   } catch (error) {
     logger.error('Diagnose route error', error.message);
-    res.status(500).json({ success: false, error: error.message });
+    
+    // Determine appropriate status code
+    let statusCode = 500;
+    if (error.message.includes('quota') || error.message.includes('billing')) {
+      statusCode = 429;
+    } else if (error.message.includes('invalid') || error.message.includes('expired') || error.message.includes('401')) {
+      statusCode = 401;
+    } else if (error.message.includes('forbidden') || error.message.includes('403')) {
+      statusCode = 403;
+    }
+    
+    res.status(statusCode).json({ 
+      success: false, 
+      error: error.message,
+      errorType: statusCode === 429 ? 'quota_exceeded' : statusCode === 401 ? 'invalid_key' : 'api_error'
+    });
   }
 });
 
