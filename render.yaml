@@ -3,6 +3,7 @@ services:
     name: medioracle-ai
     env: node
     plan: free
+    # Build command includes --legacy-peer-deps to handle React 18 peer dependency warnings
     buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install
     startCommand: cd backend && npm start
     envVars:
