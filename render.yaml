@@ -3,7 +3,7 @@ services:
     name: medioracle-ai
     env: node
     plan: free
-    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build && cd ../backend && npm install
+    buildCommand: cd frontend && npm install --legacy-peer-deps --include=dev && npm run build && cd ../backend && npm install
     startCommand: cd backend && npm start
     envVars:
       - key: OPENAI_API_KEY
